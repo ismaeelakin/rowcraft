@@ -985,3 +985,25 @@ h1 {
 .metrics article.warn strong {
   color: #753b20;
 }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #762b3b;
+  border-bottom-color: #762b3b;
+  min-height: 72px;
+}
+.topbar .brand,
+.topbar .version,
+.topbar .privacy,
+.topbar .privacy > span,
+.topbar > div > a {
+  color: #fff7ed;
+}
+.topbar .logo i {
+  background: #fff7ed;
+}
+.topbar .logo i:last-child {
+  background: #d3aa94;
+}
