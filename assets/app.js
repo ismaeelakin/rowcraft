@@ -148,7 +148,7 @@ function render() {
     el('count-review').textContent = analysis.blocked.toLocaleString();
     el('count-duplicates').textContent = analysis.duplicates.toLocaleString();
     el('trim-count').textContent =
-        `${analysis.trimmedCells.toLocaleString()} cells have whitespace changes`;
+        `${analysis.trimmedCells.toLocaleString()} ${analysis.trimmedCells === 1 ? 'cell has' : 'cells have'} whitespace changes`;
     el('export-label').textContent = `Download ${analysis.valid.toLocaleString()} ready rows`;
     const query = el('search').value.toLocaleLowerCase(), status = el('status-filter').value;
     const filtered = analysis.rows.filter((row) => (status === 'all' ||
