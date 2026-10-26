@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta
+      name="description"
+      content="Check and clean CSV files privately in your browser. Review duplicates, missing values and email syntax, then export ready rows."
+    />
+    <title>Rowcraft — Make your next import a clean one</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./assets/app.js"></script>
+  </head>
+  <body>
+    <noscript
+      ><p>This CSV workbench needs JavaScript to process files in your browser.</p></noscript
+    >
+    <header class="topbar">
+      <a class="brand" href="./"
+        ><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>rowcraft<span
+          class="version"
+          >CSV WORKBENCH</span
+        ></a
+      >
+      <div>
+        <span class="privacy"><span aria-hidden="true">◈</span> Your files stay in this tab</span
+        ><a href="https://github.com/ismaeelakin/rowcraft" target="_blank" rel="noreferrer"
+          >Source ↗</a
+        >
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <p class="eyebrow">LESS CLEANUP. MORE CONFIDENCE.</p>
+        <h1>Make your next import<br />a clean one<span>.</span></h1>
+        <p>
+          Find the duplicates, gaps and little inconsistencies hiding in your CSV.<br />Review what
+          matters. Download only what’s ready.
+        </p>
+      </section>
+      <section class="intake" aria-label="Choose your data">
+        <div id="dropzone" class="dropzone">
+          <div class="upload-icon" aria-hidden="true">↥</div>
+          <div>
+            <h2>Drop a CSV here, or choose a file</h2>
+            <p>UTF-8 · comma, semicolon or tab · up to 3 MiB</p>
+            <div class="intake-actions">
+              <label class="button" for="file">Choose a file <span>↗</span></label
+              ><input
+                class="file-input"
+                id="file"
+                type="file"
+                accept=".csv,.tsv,text/csv,text/tab-separated-values"
+                aria-label="Choose CSV file"
+              /><button id="paste-open" class="text-button">Or paste CSV</button>
+            </div>
+          </div>
+        </div>
+        <div class="sample-card">
+          <span class="sample-tag">JUST LOOKING?</span>
+          <h2>Try a slightly messy example.</h2>
+          <p>
+            A team contact list with duplicates, a broken email and a few surprises. No file needed.
+          </p>
+          <button class="secondary" id="sample">Check example data <span>→</span></button>
+        </div>
+      </section>
+      <div class="below-intake">
+        <label
+          >Input separator
+          <select id="delimiter">
+            <option value="auto">Detect automatically</option>
+            <option value=",">Comma (,)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="&#9;">Tab</option>
+          </select></label
+        >
+        <p>No uploads. No account. No saved file history.</p>
+      </div>
+      <p id="notice" class="notice" role="status" aria-live="polite">
+        Everything is checked locally in your browser. Your original file is never changed.
+      </p>
+      <section id="loaded-file" class="loaded-file" hidden>
+        <span class="file-badge" aria-hidden="true">CSV</span>
+        <div><strong id="file-name"></strong><small id="file-info"></small></div>
+        <button id="clear" class="text-button">Clear file ×</button>
+      </section>
+      <section id="workspace" hidden aria-label="CSV review workspace">
+        <div class="metrics">
+          <article><span>Records checked</span><strong id="count-total">0</strong></article>
+          <article class="good">
+            <span>Ready to export</span><strong id="count-valid">0</strong>
+          </article>
+          <article class="warn">
+            <span>Need review</span><strong id="count-review">0</strong>
+          </article>
+          <article>
+            <span>Repeated rows or keys</span><strong id="count-duplicates">0</strong>
+          </article>
+        </div>
+        <div class="work-grid">
+          <aside class="rules">
+            <div class="panel-heading">
+              <span class="step">01</span>
+              <div>
+                <h2>Choose your checks</h2>
+                <p>Rules update the preview, not your file.</p>
+              </div>
+            </div>
+            <label class="toggle"
+              ><input id="trim" type="checkbox" checked /><span
+                >Trim surrounding whitespace<small id="trim-count">0 cells changed</small></span
+              ></label
+            ><label class="toggle"
+              ><input id="deduplicate" type="checkbox" checked /><span
+                >Keep the first exact duplicate<small
+                  >Later matching rows go to review.</small
+                ></span
+              ></label
+            ><label class="field-label" for="unique">Optional unique key</label
+            ><select id="unique">
+              <option value="">No unique key</option>
+            </select>
+            <p class="hint">Keys are case-sensitive. An empty selected key needs review.</p>
+            <div class="rule-caption">
+              <span>Column</span><span>Required</span><span>Email</span>
+            </div>
+            <div id="column-rules" class="column-rules"></div>
+            <p class="hint">
+              Email checks use simple syntax, not inbox verification. Blank email cells pass unless
+              also required.
+            </p>
+            <div class="export-options">
+              <label class="toggle"
+                ><input id="protect" type="checkbox" checked /><span
+                  >Protect spreadsheet formulas<small
+                    >Prefix formula-like values with an apostrophe.</small
+                  ></span
+                ></label
+              >
+              <p class="hint">
+                This can also change negative-number cells. Turn it off when raw values are needed
+                by another parser.
+              </p>
+            </div>
+          </aside>
+          <div class="preview">
+            <div class="panel-heading">
+              <span class="step">02</span>
+              <div>
+                <h2>Review the rows</h2>
+                <p>Nothing is removed from your source.</p>
+              </div>
+            </div>
+            <div class="table-toolbar">
+              <label
+                ><span class="sr-only">Search values</span
+                ><input type="search" id="search" placeholder="Search cell values…" /></label
+              ><label
+                ><span class="sr-only">Filter rows</span
+                ><select id="status-filter">
+                  <option value="all">All records</option>
+                  <option value="ready">Ready only</option>
+                  <option value="review">Need review only</option>
+                </select></label
+              >
+            </div>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable CSV preview">
+              <table>
+                <thead>
+                  <tr id="table-head"></tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+              </table>
+              <p class="empty" id="no-matches" hidden>No records match this view.</p>
+            </div>
+            <div class="pagination">
+              <span id="page-info"></span>
+              <div>
+                <button class="secondary" id="previous">← Previous</button
+                ><button class="secondary" id="next">Next →</button>
+              </div>
+            </div>
+            <p class="preview-hint">
+              Record numbers count logical CSV records, including the header. Select one to compare
+              original and processed values. Long cells are shortened only in this preview.
+            </p>
+          </div>
+        </div>
+        <section class="export-bar">
+          <div class="panel-heading">
+            <span class="step">03</span>
+            <div>
+              <h2>Take the ready rows with you.</h2>
+              <p>
+                CSV keeps the detected separator. The JSON report keeps excluded records and their
+                original values.
+              </p>
+            </div>
+          </div>
+          <div>
+            <button id="report" class="secondary" disabled>Download review report</button
+            ><button id="export" disabled>
+              <span id="export-label">Download ready rows</span> ↗
+            </button>
+          </div>
+        </section>
+      </section>
+      <section class="principles">
+        <article>
+          <span>01 / KEEP CONTROL</span>
+          <h3>Checks you can see.</h3>
+          <p>
+            Choose required fields, email columns and a unique key. Each excluded record tells you
+            why.
+          </p>
+        </article>
+        <article>
+          <span>02 / KEEP YOUR DATA</span>
+          <h3>A file stays a file.</h3>
+          <p>
+            File contents never leave the app. Clearing a file releases this app’s copy from memory.
+          </p>
+        </article>
+        <article>
+          <span>03 / KEEP MOVING</span>
+          <h3>Ready for the next tool.</h3>
+          <p>
+            Take a checked CSV into your next import, and keep the review report for the records
+            that need attention.
+          </p>
+        </article>
+      </section>
+      <footer>
+        <span
+          >rowcraft · built by
+          <a href="https://github.com/ismaeelakin" target="_blank" rel="noreferrer"
+            >Ismaeel Habeeb</a
+          ></span
+        ><span>20,000 data records · 50 columns · no tracking scripts</span>
+      </footer>
+    </main>
+    <dialog id="paste-dialog">
+      <div class="dialog-heading">
+        <h2>Paste your CSV</h2>
+        <button id="paste-close" class="text-button" aria-label="Close paste dialog">×</button>
+      </div>
+      <form id="paste-form">
+        <label for="paste-data">Include a header row</label
+        ><textarea
+          id="paste-data"
+          required
+          spellcheck="false"
+          maxlength="3145728"
+          placeholder="name,email&#10;Ada,ada@example.test"
+        ></textarea
+        ><button type="submit">Check pasted data →</button>
+      </form>
+    </dialog>
+    <dialog id="record-dialog">
+      <div class="dialog-heading">
+        <h2 id="record-title">Record detail</h2>
+        <button id="record-close" class="text-button" aria-label="Close record details">×</button>
+      </div>
+      <pre id="record-content"></pre>
+    </dialog>
+  </body>
+</html>
