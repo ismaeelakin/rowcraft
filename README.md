@@ -8,19 +8,6 @@ A browser tool for checking CSV files, reviewing problematic records, and downlo
 
 ![Rowcraft with checked example data](docs/workbench.png)
 
-## Architecture
-
-![Architecture](docs/architecture.svg)
-
-## Use your own file
-
-1. Open the app and choose or drop a UTF-8 CSV, or paste CSV text.
-2. Review the detected separator. Choose required columns, email checks, an optional unique key, whitespace cleanup and exact-duplicate handling.
-3. Inspect the preview, search records, and compare original and processed values.
-4. Download the ready rows as CSV. Download a JSON review report for excluded records, original values and reasons.
-
-No account, installation, server upload or paid service is required. The example data lets a reviewer try the entire workflow immediately, then repeat it with their own data.
-
 ## Features
 
 - Comma, semicolon and tab-separated files; UTF-8 BOM, quoted delimiters, doubled quotes and multiline fields.
@@ -32,6 +19,45 @@ No account, installation, server upload or paid service is required. The example
 - Background processing in a Web Worker, with stale-result rejection when files or rules change.
 
 The app **never edits your source file**. Ready-row export is explicit and says how many records are excluded. A rejected earlier record does not reserve a unique key that a later usable record needs.
+
+## Tech stack
+
+TypeScript, browser Web Workers, HTML and CSS. Node.js and the built-in test runner are used for development checks.
+
+## Use your own file
+
+1. Open the app and choose or drop a UTF-8 CSV, or paste CSV text.
+2. Review the detected separator. Choose required columns, email checks, an optional unique key, whitespace cleanup and exact-duplicate handling.
+3. Inspect the preview, search records, and compare original and processed values.
+4. Download the ready rows as CSV. Download a JSON review report for excluded records, original values and reasons.
+
+No account, installation, server upload or paid service is required. The example data lets a reviewer try the entire workflow immediately, then repeat it with their own data.
+
+## Run and verify locally
+
+Build/test requires Node.js 22+ and npm. The preview command uses Python 3; any static server can serve `site/` after a build.
+
+```sh
+git clone https://github.com/ismaeelakin/rowcraft.git
+cd rowcraft
+npm ci
+npm test
+npm run preview
+```
+
+Open **http://127.0.0.1:8090**. Use a static server, rather than double-clicking the HTML file, so the module worker can load.
+
+```sh
+npm run format:check
+npm run check
+npm test
+```
+
+The 18 tests cover parsing errors, limits, quoting, Unicode, multiline records, delimiter detection, header ambiguity, normalization, required/email/key rules, rejected-first-row behavior, formula-safe exports and report fidelity. A deterministic round-trip test checks **120 generated distributions** across three delimiters against exact original cell values. CI repeats formatting, type checks and tests on Linux and Windows with Node 22 and 24.
+
+## Architecture
+
+![Architecture](docs/architecture.svg)
 
 ## Privacy
 
@@ -56,28 +82,6 @@ File contents are processed in memory inside the page and its worker. They are n
 
 This is a focused CSV workflow, not an Excel reader, general spreadsheet editor, or guarantee that data meets a third-party importer's requirements. Check the receiving system's contract too.
 
-## Run and verify locally
-
-Build/test requires Node.js 22+ and npm. The preview command uses Python 3; any static server can serve `site/` after a build.
-
-```sh
-git clone https://github.com/ismaeelakin/rowcraft.git
-cd rowcraft
-npm ci
-npm test
-npm run preview
-```
-
-Open **http://127.0.0.1:8090**. Use a static server, rather than double-clicking the HTML file, so the module worker can load.
-
-```sh
-npm run format:check
-npm run check
-npm test
-```
-
-The 18 tests cover parsing errors, limits, quoting, Unicode, multiline records, delimiter detection, header ambiguity, normalization, required/email/key rules, rejected-first-row behavior, formula-safe exports and report fidelity. A deterministic round-trip test checks **120 generated distributions** across three delimiters against exact original cell values. CI repeats formatting, type checks and tests on Linux and Windows with Node 22 and 24.
-
 ## Review the implementation
 
 | Module                       | Responsibility                                                                   |
@@ -93,3 +97,7 @@ The product demonstrates practical frontend work: typed data flow, asynchronous 
 ## Deployment
 
 The public site is served from the `gh-pages` branch. `main` contains TypeScript source, tests and the static shell. After a verified build, compiled `site/` assets are published to `gh-pages` with `.nojekyll`. No file data is stored in the repository or deployment branch.
+
+## Reproduce performance measurements
+
+Run `npm run benchmark` to generate and check deterministic 1,000-, 10,000- and 20,000-record files. [The procedure and recorded baseline](docs/PERFORMANCE.md) distinguish pure parse/check time from browser rendering and worker transfer.

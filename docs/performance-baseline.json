@@ -1,0 +1,31 @@
+{
+  "node": "v22.17.1",
+  "platform": "win32",
+  "architecture": "x64",
+  "measuredDate": "2026-10-26",
+  "warmupRuns": 3,
+  "workload": "Parse CSV and apply default checks; no DOM or worker messaging",
+  "results": [
+    {
+      "rows": 1000,
+      "bytes": 61584,
+      "repetitions": 20,
+      "medianMs": 9.829,
+      "p95BatchMs": 59.9
+    },
+    {
+      "rows": 10000,
+      "bytes": 655584,
+      "repetitions": 20,
+      "medianMs": 148.034,
+      "p95BatchMs": 223.102
+    },
+    {
+      "rows": 20000,
+      "bytes": 1355584,
+      "repetitions": 20,
+      "medianMs": 413.833,
+      "p95BatchMs": 615.981
+    }
+  ]
+}
