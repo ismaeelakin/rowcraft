@@ -7,12 +7,13 @@
     -apple-system,
     sans-serif;
   color: #24282b;
-  background: #ffffff;
+  background: #f3f0ea;
   --accent: #762b3b;
-  --line: #ece7df;
-  --muted: #24282b;
+  --line: #c9c4bb;
+  --muted: #555b60;
   --paper: #fff;
   --soft: #ece7df;
+  --ink: #24282b;
 }
 * {
   box-sizing: border-box;
@@ -952,16 +953,6 @@ dialog pre {
   .intake-actions {
     gap: 20px;
   }
-}
-
-:root {
-  color: #24282b;
-  background: #f3f0ea;
-  --line: #c9c4bb;
-  --muted: #555b60;
-  --accent: #762b3b;
-  --blue: #762b3b;
-  --ink: #24282b;
 }
 
 button,
