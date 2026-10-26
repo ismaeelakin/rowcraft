@@ -1,12 +1,16 @@
 # Rowcraft
 
-**Make your next import a clean one.** A finished browser tool for checking CSV files, reviewing problematic records, and downloading the rows that are ready.
+A browser tool for checking CSV files, reviewing problematic records, and downloading the rows that are ready.
 
 **[Open Rowcraft →](https://ismaeelakin.github.io/rowcraft/)** · [Try the built-in example](https://ismaeelakin.github.io/rowcraft/) · [How it works](docs/DESIGN.md)
 
 [![CSV correctness](https://github.com/ismaeelakin/rowcraft/actions/workflows/ci.yml/badge.svg)](https://github.com/ismaeelakin/rowcraft/actions/workflows/ci.yml)
 
 ![Rowcraft with checked example data](docs/workbench.png)
+
+## Architecture
+
+![Architecture](docs/architecture.svg)
 
 ## Use your own file
 
@@ -17,7 +21,7 @@
 
 No account, installation, server upload or paid service is required. The example data lets a reviewer try the entire workflow immediately, then repeat it with their own data.
 
-## Useful, explicit behavior
+## Features
 
 - Comma, semicolon and tab-separated files; UTF-8 BOM, quoted delimiters, doubled quotes and multiline fields.
 - Delimiter detection that respects quoted records, with a manual override for ambiguous files.
@@ -35,7 +39,7 @@ File contents are processed in memory inside the page and its worker. They are n
 
 **Clear file** terminates the worker, drops application data references, and clears the preview, details and pasted text. It does not securely erase browser memory, alter downloaded files, or defend against a compromised browser/extension. Loading the site still makes ordinary requests for public site assets; the hosting provider can observe those requests, not your CSV contents through this app.
 
-## Limits and honest edges
+## Limits
 
 | Boundary               | Behavior                                                                                    |
 | ---------------------- | ------------------------------------------------------------------------------------------- |
