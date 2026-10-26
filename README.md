@@ -6,7 +6,7 @@ A browser tool for checking CSV files, reviewing problematic records, and downlo
 
 [![CSV correctness](https://github.com/ismaeelakin/rowcraft/actions/workflows/ci.yml/badge.svg)](https://github.com/ismaeelakin/rowcraft/actions/workflows/ci.yml)
 
-![Rowcraft with checked example data](docs/workbench-current.png)
+![Rowcraft with checked example data](docs/workbench-identity.png)
 
 ## Features
 
@@ -57,7 +57,7 @@ The 18 tests cover parsing errors, limits, quoting, Unicode, multiline records, 
 
 ## Architecture
 
-![Architecture](docs/architecture.svg)
+![Architecture](docs/architecture-project.svg)
 
 ## Privacy
 
