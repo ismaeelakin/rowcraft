@@ -6,7 +6,14 @@ A browser tool for checking CSV files, reviewing problematic records, and downlo
 
 [![CSV correctness](https://github.com/ismaeelakin/rowcraft/actions/workflows/ci.yml/badge.svg)](https://github.com/ismaeelakin/rowcraft/actions/workflows/ci.yml)
 
-![Rowcraft with checked example data](docs/workbench-identity.png)
+![Rowcraft showing checked contacts, row totals and validation rules](docs/workbench-identity.png)
+
+<details>
+<summary>Mobile layout</summary>
+
+<img src="docs/workbench-mobile.png" alt="Rowcraft on a phone" width="300" />
+
+</details>
 
 ## Features
 
